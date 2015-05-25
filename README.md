@@ -14,7 +14,7 @@ Build domain cache. Run it in first and after domain add/delete. Usage: ./acquia
 
 View current cache. Usage: ./acquia-curl.php view
 
-Reset varnish for domains. Usage: ./acquia-curl.php varnish domain1 domain2 ...
+Reset varnish for domains. Usage: ./acquia-curl.php varnish domain1  https://domain2.com/any/path/will/stripped ...
 
 Execute "./acquia-curl.php" to view available commands
 

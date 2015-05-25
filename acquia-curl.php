@@ -94,7 +94,7 @@ class AcquiaCurl {
     
     protected function _parse_domain($str) {
         // Strip https:// and "http://"
-        if (strpos($str, '//' !== FALSE)) {
+        if (strpos($str, '//') !== FALSE) {
             $str = parse_url($str, PHP_URL_HOST);
         } 
         else {
@@ -177,8 +177,7 @@ class AcquiaCurlCommand extends AcquiaCurl {
         // curl -s -u "${username}:${token}" -X DELETE ${endpoint}sites/${site}/envs/${env}/domains/${domain}/cache.json
         $domain = $this->_parse_domain($arg);
         print "Clear varnish for {$domain}\n";
-        if (!isset($this->cache['domains'][$domain])) {
-            print "Missing domain {$domain}\n";
+        if (empty($domain)) {
             return;
         }
 
@@ -186,6 +185,16 @@ class AcquiaCurlCommand extends AcquiaCurl {
         $env = $this->cache['domains'][$domain]['env'];
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
         $result = $this->fetch("sites/${site}/envs/${env}/domains/${domain}/cache");
+    }
+
+    protected function _parse_domain($str) {
+        $domain = parent::_parse_domain($str);
+        if (!isset($this->cache['domains'][$domain])) {
+            print "Missing domain {$domain}\n";
+            // Do not exit() here because command allows multiple args (domains).
+            return NULL;
+        }
+        return $domain;
     }
 
 }
