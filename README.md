@@ -9,3 +9,15 @@
 5. Execute "./acquia-curl.php" to view usage
 
 ## Commands
+
+Build domain cache. Run it in first and after domain add/delete. Usage: ./acquia-curl.php reset
+
+View current cache. Usage: ./acquia-curl.php view
+
+Reset varnish for domains. Usage: ./acquia-curl.php varnish domain1 domain2 ...
+
+Execute "./acquia-curl.php" to view available commands
+
+## Roadmap
+
+Cover most used command from acquia cloud api https://cloudapi.acquia.com/
