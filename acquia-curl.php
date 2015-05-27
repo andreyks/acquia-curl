@@ -201,7 +201,7 @@ class AcquiaCurlCommand extends AcquiaCurl {
 
     protected function ssh_connect($arg) {
         $domain = $this->_parse_domain($arg);
-        print "Ssh connect line:\n";
+        print "Ssh connect line for {$domain}:\n";
         if (empty($domain)) {
             return;
         }
@@ -214,7 +214,12 @@ class AcquiaCurlCommand extends AcquiaCurl {
         // TODO: validate server result!!
         eval($drushrc);
         
-        printf("ssh -l%s %s\n", $aliases[$env]['remote-user'], $aliases[$env]['remote-host']);
+        if (!empty($aliases[$env]['remote-user']) && $aliases[$env]['remote-host']) {
+            printf("ssh -l%s %s\n", $aliases[$env]['remote-user'], $aliases[$env]['remote-host']);
+        }
+        else {
+            print "Missing information\n";
+        }
     }
 
     protected function _parse_domain($str) {

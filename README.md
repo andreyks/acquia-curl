@@ -21,7 +21,7 @@ Get ssh connect string.  Usage: ./acquia-curl.php varnish domain1 domain2 ...
 Execute "./acquia-curl.php" to view available commands
 
 
-Instead domain you can use url. Domain will be detected: https://domain2.com/any/path/will/be/stripped -> domain2.com
+You can use url instead domain. Domain will be detected: https://domain2.com/any/path/will/be/stripped -> domain2.com
 
 (...) means that you can use any argument count.
 
