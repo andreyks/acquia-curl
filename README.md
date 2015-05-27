@@ -14,9 +14,16 @@ Build domain cache. Run it in first and after domain add/delete. Usage: ./acquia
 
 View current cache. Usage: ./acquia-curl.php view
 
-Reset varnish for domains. Usage: ./acquia-curl.php varnish domain1  https://domain2.com/any/path/will/stripped ...
+Reset varnish for domains. Usage: ./acquia-curl.php varnish domain1 domain2 ...
+
+Get ssh connect string.  Usage: ./acquia-curl.php varnish domain1 domain2 ...
 
 Execute "./acquia-curl.php" to view available commands
+
+
+Instead domain you can use url. Domain will be detected: https://domain2.com/any/path/will/be/stripped -> domain2.com
+
+(...) means that you can use any argument count.
 
 ## Roadmap
 

@@ -114,6 +114,7 @@ class AcquiaCurlCommand extends AcquiaCurl {
         'reset' => 'Build domain cache. Run it in first and after domain add/delete. Usage: %s reset',
         'view' => 'View current cache. Usage: %s view',
         'varnish' => 'Reset varnish for domains. Usage: %s varnish domain1 domain2 ...',
+	'ssh_connect' => 'Print ssh connect string for domains. Usage %s ssh-connect domain1 doamin2 ...',
     );
     protected $allowed_options = array(
         '-v' => 'Enable debug mode. Override value from config.',
@@ -145,7 +146,10 @@ class AcquiaCurlCommand extends AcquiaCurl {
         $cache = array(
             'sites' => array_fill_keys($sites, array()), // site > env > domain
             'domain' => array(), // domain > env, site
+            'drushrc' =>array(), 
         );
+        
+        // Fetch domain info
         foreach ($sites as $site) {
             $envs = $this->fetch("sites/{$site}/envs");
             foreach ($envs as $env) {
@@ -163,7 +167,14 @@ class AcquiaCurlCommand extends AcquiaCurl {
                 }
             }
         }
-        $fp = fopen($this->cache_file, 'w');
+        
+        // Fetch drushrc info (alias, remote-host, remote-user)
+        // curl -s -u "${username}:${token}" ${endpoint}me/drushrc.json
+        $drushrc = $this->fetch("me/drushrc");
+        $cache['drushrc'] = $drushrc;
+        
+        // Save to cache
+        $fp = fopen($this->settings['cache_file'], 'w');
         fwrite($fp, json_encode($cache));
         fclose($fp);
         print "Cache file updated\n";
@@ -183,8 +194,27 @@ class AcquiaCurlCommand extends AcquiaCurl {
 
         $site = $this->cache['domains'][$domain]['site'];
         $env = $this->cache['domains'][$domain]['env'];
+        
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
         $result = $this->fetch("sites/${site}/envs/${env}/domains/${domain}/cache");
+    }
+
+    protected function ssh_connect($arg) {
+        $domain = $this->_parse_domain($arg);
+        print "Ssh connect line:\n";
+        if (empty($domain)) {
+            return;
+        }
+
+        $site = $this->cache['domains'][$domain]['site'];
+        $env = $this->cache['domains'][$domain]['env'];
+        
+        $drushrc = $this->cache['drushrc'][$site][$env];
+        $drush_major_version = 7;  
+        // TODO: validate server result!!
+        eval($drushrc);
+        
+        printf("ssh -l%s %s\n", $aliases[$env]['remote-user'], $aliases[$env]['remote-host']);
     }
 
     protected function _parse_domain($str) {
