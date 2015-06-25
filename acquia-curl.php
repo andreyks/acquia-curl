@@ -114,8 +114,8 @@ class AcquiaCurlCommand extends AcquiaCurl {
         'reset' => 'Build domain cache. Run it in first and after domain add/delete. Usage: %s reset',
         'view' => 'View current cache. Usage: %s view',
         'varnish' => 'Reset varnish for domains. Usage: %s varnish domain1 domain2 ...',
-	'ssh_connect' => 'Print ssh connect string for domains. Usage %s ssh-connect domain1 doamin2 ...',
-    );
+	    'ssh_connect' => 'Print ssh connect string for domains. Usage %s ssh_connect domain1 doamin2 ...',
+	);
     protected $allowed_options = array(
         '-v' => 'Enable debug mode. Override value from config.',
         '-h' => 'Print default help',
@@ -138,6 +138,9 @@ class AcquiaCurlCommand extends AcquiaCurl {
     public function execute($command, $arg = '', $options = array()) {
         if (in_array($command, array_keys($this->allowed_commands))) {
             $this->$command($arg);
+        }
+	else {
+            print "Unknown command $command\n";
         }
     }
 
